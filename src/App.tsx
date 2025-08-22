@@ -8,21 +8,37 @@ import { Good } from './types/Good';
 export const App: React.FC = () => {
   const [isSelected, setIsSelected] = useState<Good[]>([]);
   const [selected, setSelected] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     switch (selected) {
       case 'allGoods': {
-        getAll().then(setIsSelected);
+        getAll()
+          .then(setIsSelected)
+          .catch(() =>
+            setErrorMessage('Something went Wrong, please try again later.'),
+          );
+
         break;
       }
 
       case '5first': {
-        get5First().then(setIsSelected);
+        get5First()
+          .then(setIsSelected)
+          .catch(() =>
+            setErrorMessage('Something went Wrong, please try again later.'),
+          );
+
         break;
       }
 
       case 'allRed': {
-        getRedGoods().then(setIsSelected);
+        getRedGoods()
+          .then(setIsSelected)
+          .catch(() =>
+            setErrorMessage('Something went Wrong, please try again later.'),
+          );
+
         break;
       }
     }
@@ -60,6 +76,7 @@ export const App: React.FC = () => {
         </button>
 
         <GoodsList goods={isSelected} name={selected} />
+        {errorMessage && <p>{errorMessage}</p>}
       </div>
       ;
     </>
