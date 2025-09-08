@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import './App.scss';
 import { GoodsList } from './GoodsList';
 
-import { getAll, get5First, getRedGoods } from './api/goods';
+import * as goodsAPI from './api/goods';
 import { Good } from './types/Good';
+import { FilterType } from './types/FilterType';
+import { DEFAULT_ERROR_MESSAGE } from './constants/api';
 
 export const App: React.FC = () => {
   const [isSelected, setIsSelected] = useState<Good[]>([]);
@@ -12,32 +14,29 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     switch (selected) {
-      case 'allGoods': {
-        getAll()
+      case FilterType.allGoods: {
+        goodsAPI
+          .getAll()
           .then(setIsSelected)
-          .catch(() =>
-            setErrorMessage('Something went Wrong, please try again later.'),
-          );
+          .catch(() => setErrorMessage(DEFAULT_ERROR_MESSAGE));
 
         break;
       }
 
-      case '5first': {
-        get5First()
+      case FilterType.firstFive: {
+        goodsAPI
+          .get5First()
           .then(setIsSelected)
-          .catch(() =>
-            setErrorMessage('Something went Wrong, please try again later.'),
-          );
+          .catch(() => setErrorMessage(DEFAULT_ERROR_MESSAGE));
 
         break;
       }
 
-      case 'allRed': {
-        getRedGoods()
+      case FilterType.allRed: {
+        goodsAPI
+          .getRedGoods()
           .then(setIsSelected)
-          .catch(() =>
-            setErrorMessage('Something went Wrong, please try again later.'),
-          );
+          .catch(() => setErrorMessage(DEFAULT_ERROR_MESSAGE));
 
         break;
       }
@@ -52,7 +51,7 @@ export const App: React.FC = () => {
         <button
           type="button"
           data-cy="all-button"
-          onClick={() => setSelected('allGoods')}
+          onClick={() => setSelected(FilterType.allGoods)}
         >
           Load all goods
         </button>
@@ -60,7 +59,7 @@ export const App: React.FC = () => {
         <button
           type="button"
           data-cy="first-five-button"
-          onClick={() => setSelected('5first')}
+          onClick={() => setSelected(FilterType.firstFive)}
         >
           Load 5 first goods
         </button>
@@ -69,7 +68,7 @@ export const App: React.FC = () => {
           type="button"
           data-cy="red-button"
           onClick={() => {
-            setSelected('allRed');
+            setSelected(FilterType.allRed);
           }}
         >
           Load red goods
@@ -78,7 +77,6 @@ export const App: React.FC = () => {
         <GoodsList goods={isSelected} name={selected} />
         {errorMessage && <p>{errorMessage}</p>}
       </div>
-      ;
     </>
   );
 };

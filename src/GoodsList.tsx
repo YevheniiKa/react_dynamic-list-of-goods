@@ -1,6 +1,7 @@
 /* eslint-disable react/display-name */
 import React from 'react';
 import { Good } from './types/Good';
+import { FilterType } from './types/FilterType';
 
 type Props = {
   goods: Good[];
@@ -15,7 +16,7 @@ export const GoodsList: React.FC<Props> = React.memo(({ goods, name }) => {
           key={good.id}
           data-cy="good"
           style={{
-            color: name === 'allRed' ? 'red' : good.color,
+            color: name === FilterType.allRed ? 'red' : good.color,
           }}
         >
           {good.name}
